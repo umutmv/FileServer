@@ -14,7 +14,7 @@ class FileHandler implements HttpHandler {
         }
     }
 
-    private void handleFileContentUpload(HttpExchange exchange) throws IOException {
+    private void handleFileContentUpload(HttpExchange exchange) throws IOException {  // isteği işle, içeriği oku string olarak hedefe yaz
         System.out.println("Dosya yükleme isteği alındı." );
         try (InputStream is = exchange.getRequestBody();
              InputStreamReader isr = new InputStreamReader(is);
@@ -36,13 +36,13 @@ class FileHandler implements HttpHandler {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Dosya yüklenirken hata oluştu." + e.getMessage());
-            exchange.sendResponseHeaders(500, 0); // Internal Server Error
+            exchange.sendResponseHeaders(500, 0);
         }
         exchange.getResponseBody().close();
     }
 
     private void handleSearchRequest(HttpExchange exchange) throws IOException {
-        String query = exchange.getRequestURI().getQuery();
+        String query = exchange.getRequestURI().getQuery(); //sorgu parametrelerini string olarak al
         String searchString = query != null ? query : "";
 
         if (query != null) {
@@ -63,7 +63,6 @@ class FileHandler implements HttpHandler {
             }
             os.close();
         } else {
-            // Eğer geçerli bir arama sorgusu yoksa, hata mesajı döndürebilirsiniz.
             String errorMessage = "Geçersiz arama.";
             exchange.sendResponseHeaders(400, errorMessage.length());
             OutputStream os = exchange.getResponseBody();
@@ -76,8 +75,6 @@ class FileHandler implements HttpHandler {
         List<String> searchResults = new ArrayList<>();
         File storageDir = new File(FileServer.STORAGE_DIRECTORY);
         File[] files = storageDir.listFiles();
-        //TODO: Arama fonksiyonu burası
-
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
